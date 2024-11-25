@@ -1,10 +1,29 @@
 import Link from 'next/link'
 import ThemeToggleBtn from './ThemeToggleBtn'
+import SignInOutButton from './SignInOutButton'
+import { Button } from './ui/button'
 
 const navLinks = [
   { title: 'Home', href: '/' },
-  { title: 'About', href: '/about' },
+  { title: 'About Me', href: '/about' },
+  { title: 'Create', href: '/create' },
 ]
+
+// const Navbar = () => {
+//   return (
+//     <nav className="fixed left-1/2 top-3 z-50 flex w-2/3 max-w-5xl -translate-x-1/2 items-center justify-between rounded-lg border border-neutral-500 bg-white/10 px-5 py-3 shadow-md backdrop-blur-md dark:border-neutral-600">
+//       <div className="font-serif text-2xl font-bold text-gray-800 dark:text-white">BlogSphere</div>
+//       <ul className="flex items-center gap-4">
+//         {navLinks.map(n => (
+//           <Link key={n.title} href={n.href}>
+//             {n.title}
+//           </Link>
+//         ))}
+//       </ul>
+//       <ThemeToggleBtn />
+//     </nav>
+//   )
+// }
 
 const Navbar = () => {
   return (
@@ -12,12 +31,13 @@ const Navbar = () => {
       <h1 className="font-Satisfy pl-2 text-base font-medium text-neutral-900 dark:text-neutral-100 sm:pl-4 sm:text-2xl">
         BlogSphere
       </h1>
-      <ul className="flex items-center gap-4">
+      <ul className="flex items-center gap-2">
         {navLinks.map(n => (
           <Link key={n.title} href={n.href}>
-            {n.title}
+            <Button variant="ghost">{n.title}</Button>
           </Link>
         ))}
+        <SignInOutButton />
         <ThemeToggleBtn />
       </ul>
     </nav>
