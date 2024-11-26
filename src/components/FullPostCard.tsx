@@ -6,7 +6,6 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { getTagColor } from '@/lib/utils'
 
 const FullPostCard: FC<{ id: string }> = async ({ id }) => {
-  await new Promise(resolve => setTimeout(resolve, 2000))
   const postData = await db.query.Posts.findFirst({
     where: eq(Posts.id, id),
     with: {
