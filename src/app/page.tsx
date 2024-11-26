@@ -14,14 +14,18 @@ export const tagColors = [
 ]
 
 export default async function Home() {
-  const posts = await db.query.Posts.findMany()
+  const posts = await db.query.Posts.findMany({
+    columns: {
+      content: false,
+    },
+  })
 
   return (
     <div className="m-5 flex flex-wrap gap-4">
       {posts.map(post => (
         <div key={post.id} className="max-w-xl space-y-2 rounded-lg border border-neutral-500 p-4">
           <h2 className="text-2xl font-semibold">{post.title}</h2>
-          <p>{post.content}...</p>
+          <p>{post.slicedContent}...</p>
           <div className="flex items-center justify-between">
             <div className="space-x-2">
               {post?.tags &&

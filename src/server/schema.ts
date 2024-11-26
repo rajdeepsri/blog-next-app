@@ -15,6 +15,7 @@ export const Posts = pgTable(
     id: uuid('id').primaryKey().defaultRandom(),
     title: text('title').notNull(),
     content: text('content'),
+    slicedContent: text('sliced_content'),
     createdAt: timestamp('created_at').defaultNow(),
     updatedAt: timestamp('updated_at').defaultNow().notNull(),
     authorId: text('author_id')
