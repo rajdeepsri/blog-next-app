@@ -6,6 +6,7 @@ import { db } from '.'
 import { Post } from './schema'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { redirect } from 'next/navigation'
 
 const postSchema = z.object({
   title: z.string(),
@@ -52,6 +53,7 @@ export const createPost = async (data: FormData) => {
     authorId: session.user.id,
   })
 
-  revalidatePath('/create') // Refresh admin page
-  revalidatePath('/') // Refresh admin page
+  revalidatePath('/create')
+  revalidatePath('/')
+  redirect('/create')
 }

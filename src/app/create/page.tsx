@@ -19,15 +19,17 @@ import { tagColors } from '../page'
 
 const CreatePost: FC = async () => {
   const session = await getServerSession(authOptions)
-
-  if (!session) return <p>please sign in to continue</p>
+  if (!session) return <p className="my-4 text-center">please sign in to continue</p>
 
   const userPosts = await db.query.Post.findMany({
     where: eq(Post.authorId, session.user.id),
   })
 
   return (
-    <div className="my-5 flex w-screen flex-col items-center justify-center gap-10">
+    <div className="my-5 flex w-screen flex-col items-center justify-center gap-5">
+      <h1 className="text-3xl font-semibold text-neutral-700 dark:text-neutral-300">
+        Welcome {session.user.name}
+      </h1>
       <Dialog>
         <DialogTrigger asChild>
           <Button>Create Post</Button>
