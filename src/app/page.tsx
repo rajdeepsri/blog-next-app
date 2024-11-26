@@ -14,7 +14,7 @@ export const tagColors = [
 ]
 
 export default async function Home() {
-  const posts = await db.query.Post.findMany()
+  const posts = await db.query.Posts.findMany()
 
   return (
     <div className="m-5 flex flex-wrap gap-4">

@@ -18,7 +18,9 @@ const SignInOutButton = async () => {
             <TooltipTrigger>
               <Avatar className="mx-1 h-9 w-9">
                 <AvatarImage src={session.user.image} alt={session.user.name || 'user-avatar'} />
-                <AvatarFallback className="text-xs">RS</AvatarFallback>
+                <AvatarFallback className="text-xs">
+                  {session.user?.name?.[0] || 'U'}
+                </AvatarFallback>
               </Avatar>
             </TooltipTrigger>
             <TooltipContent className="bg-black text-white">

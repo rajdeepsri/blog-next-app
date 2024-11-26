@@ -1,3 +1,4 @@
+import { relations } from 'drizzle-orm'
 import { index, pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core'
 
 export const users = pgTable('users', {
@@ -5,9 +6,10 @@ export const users = pgTable('users', {
   name: text('name').notNull(),
   email: text('email').notNull().unique(),
   createdAt: timestamp('created_at').defaultNow(),
+  avatarUrl: text('avatar_url'),
 })
 
-export const Post = pgTable(
+export const Posts = pgTable(
   'posts',
   {
     id: uuid('id').primaryKey().defaultRandom(),
@@ -26,3 +28,10 @@ export const Post = pgTable(
     }
   },
 )
+
+export const postsRelations = relations(Posts, ({ one }) => ({
+  users: one(users, {
+    fields: [Posts.authorId], // The foreign key in the Posts table
+    references: [users.id], // The primary key in the users table
+  }),
+}))

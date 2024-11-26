@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 import { db } from '.'
-import { Post } from './schema'
+import { Posts } from './schema'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { redirect } from 'next/navigation'
@@ -46,7 +46,7 @@ export const createPost = async (data: FormData) => {
     throw new Error('Not authenticated')
   }
 
-  await db.insert(Post).values({
+  await db.insert(Posts).values({
     title: validatedData.title,
     content: validatedData.content,
     tags: validatedData.tags,

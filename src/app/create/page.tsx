@@ -14,15 +14,15 @@ import React, { FC } from 'react'
 import { authOptions } from '../api/auth/[...nextauth]/route'
 import { db } from '@/server'
 import { eq } from 'drizzle-orm'
-import { Post } from '@/server/schema'
+import { Posts } from '@/server/schema'
 import { tagColors } from '../page'
 
 const CreatePost: FC = async () => {
   const session = await getServerSession(authOptions)
   if (!session) return <p className="my-4 text-center">please sign in to continue</p>
 
-  const userPosts = await db.query.Post.findMany({
-    where: eq(Post.authorId, session.user.id),
+  const userPosts = await db.query.Posts.findMany({
+    where: eq(Posts.authorId, session.user.id),
   })
 
   return (
