@@ -10,24 +10,17 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { createPost } from '@/server/actions'
 import { getServerSession } from 'next-auth'
-import React, { FC } from 'react'
+import React, { FC, Suspense } from 'react'
 import { authOptions } from '../api/auth/[...nextauth]/route'
 import { db } from '@/server'
 import { eq } from 'drizzle-orm'
 import { Posts } from '@/server/schema'
-import { tagColors } from '../page'
-import Link from 'next/link'
+import PostCard from '@/components/PostCard'
+import LoadingSkeleton from '@/components/LoadingSkeleton'
 
 const CreatePost: FC = async () => {
   const session = await getServerSession(authOptions)
   if (!session) return <p className="my-4 text-center">please sign in to continue</p>
-
-  const userPosts = await db.query.Posts.findMany({
-    where: eq(Posts.authorId, session.user.id),
-    columns: {
-      content: false,
-    },
-  })
 
   return (
     <div className="my-5 flex w-screen flex-col items-center justify-center gap-5">
@@ -51,32 +44,22 @@ const CreatePost: FC = async () => {
           </form>
         </DialogContent>
       </Dialog>
-      <section className="flex w-full max-w-5xl flex-col gap-4">
-        {userPosts &&
-          userPosts.map(post => (
-            <div key={post.id} className="space-y-1 rounded-lg border border-neutral-600 p-2">
-              <h2 className="text-2xl font-semibold">{post.title}</h2>
-              <p>{post.slicedContent}...</p>
-              <div className="flex items-center justify-between pt-2">
-                <div className="flex items-center gap-2">
-                  {post?.tags &&
-                    post.tags.map((tag, index) => (
-                      <span
-                        className={`rounded-sm p-1 text-xs font-semibold text-white ${tagColors[index % tagColors.length]}`}
-                        key={tag}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                </div>
-                <Link href={`/posts/${post.id}`}>
-                  <Button variant="outline">Read More</Button>
-                </Link>
-              </div>
-            </div>
-          ))}
-      </section>
+      <Suspense fallback={<LoadingSkeleton className="max-w-5xl" />}>
+        <UserPosts userId={session.user.id} />
+      </Suspense>
     </div>
+  )
+}
+
+const UserPosts: FC<{ userId: string }> = async ({ userId }) => {
+  const userPosts = await db.query.Posts.findMany({
+    where: eq(Posts.authorId, userId),
+  })
+
+  return (
+    <section className="flex w-full max-w-5xl flex-col gap-4">
+      {userPosts && userPosts.map(post => <PostCard key={post.id} post={post} isAdminPage />)}
+    </section>
   )
 }
 
