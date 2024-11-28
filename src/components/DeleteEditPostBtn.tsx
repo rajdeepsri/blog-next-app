@@ -15,14 +15,21 @@ import {
 import { Post } from './PostCard'
 import { Input } from './ui/input'
 import { Textarea } from './ui/textarea'
-import { Loader2 } from 'lucide-react'
+import { Loader2, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import Image from 'next/image'
 
 const DeleteEditPostBtn: FC<{ post: Post }> = ({ post }) => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    title: string
+    content: string
+    tags: string
+    image: File | null
+  }>({
     title: post.title,
     content: post.content!,
-    tags: post.tags?.join(','),
+    tags: post.tags?.join(',') || '',
+    image: null,
   })
   const [editLoading, setEditLoading] = useState<boolean>(false)
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false)
@@ -32,11 +39,12 @@ const DeleteEditPostBtn: FC<{ post: Post }> = ({ post }) => {
     setEditLoading(true)
     e.preventDefault()
     try {
-      await editPost(formData, post.id)
+      await editPost(formData, post.id, post.imageUrl)
       setFormData({
         title: '',
         content: '',
         tags: '',
+        image: null,
       })
       closeButtonRef.current?.click()
     } catch (error) {
@@ -88,7 +96,40 @@ const DeleteEditPostBtn: FC<{ post: Post }> = ({ post }) => {
               value={formData.tags}
               onChange={e => setFormData({ ...formData, tags: e.target.value })}
             />
-            <Input type="file" accept="image/*" name="image" className="cursor-pointer" />
+            <div className="relative">
+              <Input
+                type="file"
+                accept="image/*"
+                name="image"
+                className="cursor-pointer"
+                onChange={e => {
+                  const file = e.target.files?.[0] || null
+                  setFormData({ ...formData, image: file })
+                }}
+              />
+              <button
+                onClick={() => setFormData({ ...formData, image: null })}
+                type="button"
+                className="absolute right-3 top-1/2 flex -translate-y-1/2 cursor-pointer items-center justify-center rounded-sm border border-neutral-800 p-1 transition-all duration-100 hover:bg-neutral-800"
+              >
+                <X size={13} />
+              </button>
+            </div>
+            {formData.image && (
+              <Image
+                src={URL.createObjectURL(formData.image)}
+                alt="Preview"
+                width={100}
+                height={100}
+                className="w-full"
+                style={{ objectFit: 'cover' }}
+                onLoad={() => {
+                  // Create a temporary URL for the file and revoke it after the image is loaded
+                  const tempUrl = URL.createObjectURL(formData.image!)
+                  URL.revokeObjectURL(tempUrl)
+                }}
+              />
+            )}
             <Button
               disabled={editLoading}
               className={editLoading ? 'cursor-not-allowed' : ''}

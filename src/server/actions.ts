@@ -15,6 +15,7 @@ const postSchema = z.object({
   title: z.string(),
   content: z.string(),
   tags: z.array(z.string()).optional(),
+  image: z.any().optional(),
 })
 
 export const createPost = async (data: FormData) => {
@@ -87,14 +88,16 @@ export const deletePost = async (post: Post) => {
 }
 
 export const editPost = async (
-  data: { title: string; content: string; tags?: string },
+  data: { title: string; content: string; tags?: string; image: File | null },
   postId: string,
+  imageUrl: string | null,
 ) => {
   // data validation
   const rawData = {
     title: data.title,
     content: data.content,
     tags: data.tags?.split(',').map(tag => tag.trim()) || [],
+    image: data.image,
   }
 
   const validationResult = postSchema.safeParse(rawData)
@@ -114,6 +117,17 @@ export const editPost = async (
     throw new Error('Not authenticated')
   }
 
+  let updatedImageUrl = imageUrl || null
+  if (data.image) {
+    if (imageUrl) await deleteImage(imageUrl)
+
+    const uploadImageResult = await uploadImage(data.image)
+    if (!uploadImageResult.success) {
+      throw new Error(uploadImageResult.error!)
+    }
+    updatedImageUrl = uploadImageResult.publicUrl!
+  }
+
   await db
     .update(Posts)
     .set({
@@ -122,6 +136,7 @@ export const editPost = async (
       tags: validatedData.tags,
       slicedContent: validatedData.content.slice(0, 100),
       updatedAt: new Date(),
+      imageUrl: updatedImageUrl,
     })
     .where(eq(Posts.id, postId))
 
