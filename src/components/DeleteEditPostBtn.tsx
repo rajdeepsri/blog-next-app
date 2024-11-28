@@ -16,6 +16,7 @@ import { Post } from './PostCard'
 import { Input } from './ui/input'
 import { Textarea } from './ui/textarea'
 import { Loader2 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 const DeleteEditPostBtn: FC<{ post: Post }> = ({ post }) => {
   const [formData, setFormData] = useState({
@@ -23,11 +24,12 @@ const DeleteEditPostBtn: FC<{ post: Post }> = ({ post }) => {
     content: post.content!,
     tags: post.tags?.join(','),
   })
-  const [isLoading, setIsLoading] = useState(false)
+  const [editLoading, setEditLoading] = useState<boolean>(false)
+  const [deleteLoading, setDeleteLoading] = useState<boolean>(false)
   const closeButtonRef = useRef<HTMLButtonElement>(null)
 
-  const handleSubmit = async (e: FormEvent) => {
-    setIsLoading(true)
+  const handleEdit = async (e: FormEvent) => {
+    setEditLoading(true)
     e.preventDefault()
     try {
       await editPost(formData, post.id)
@@ -40,8 +42,14 @@ const DeleteEditPostBtn: FC<{ post: Post }> = ({ post }) => {
     } catch (error) {
       console.error('Failed to edit post:', error)
     } finally {
-      setIsLoading(false)
+      setEditLoading(false)
     }
+  }
+
+  const handleDeletePost = async () => {
+    setDeleteLoading(true)
+    await deletePost(post)
+    setDeleteLoading(false)
   }
 
   return (
@@ -56,7 +64,7 @@ const DeleteEditPostBtn: FC<{ post: Post }> = ({ post }) => {
           <DialogClose ref={closeButtonRef} hidden>
             close
           </DialogClose>
-          <form className="m-5 flex min-w-[25rem] flex-col space-y-3" onSubmit={handleSubmit}>
+          <form className="m-5 flex min-w-[25rem] flex-col space-y-3" onSubmit={handleEdit}>
             <Input
               type="text"
               name="title"
@@ -80,12 +88,13 @@ const DeleteEditPostBtn: FC<{ post: Post }> = ({ post }) => {
               value={formData.tags}
               onChange={e => setFormData({ ...formData, tags: e.target.value })}
             />
+            <Input type="file" accept="image/*" name="image" className="cursor-pointer" />
             <Button
-              disabled={isLoading}
-              className={isLoading ? 'cursor-not-allowed' : ''}
+              disabled={editLoading}
+              className={editLoading ? 'cursor-not-allowed' : ''}
               type="submit"
             >
-              {isLoading ? <Loader2 className="animate-spin" /> : 'Edit'}
+              {editLoading ? <Loader2 className="animate-spin" /> : 'Edit'}
             </Button>
           </form>
         </DialogContent>
@@ -101,8 +110,12 @@ const DeleteEditPostBtn: FC<{ post: Post }> = ({ post }) => {
               This action cannot be undone. This will permanently delete your post.
             </DialogDescription>
             <div className="flex w-full items-center justify-center">
-              <Button className="mt-4 w-1/2" onClick={() => deletePost(post.id)}>
-                Delete
+              <Button
+                disabled={deleteLoading}
+                className={cn('mt-4 w-1/2', deleteLoading ? 'cursor-not-allowed' : '')}
+                onClick={handleDeletePost}
+              >
+                {deleteLoading ? <Loader2 className="animate-spin" /> : 'Delete'}
               </Button>
             </div>
           </DialogHeader>

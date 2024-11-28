@@ -22,6 +22,7 @@ export const Posts = pgTable(
       .references(() => users.id)
       .notNull(),
     tags: varchar('tags', { length: 256 }).array(),
+    imageUrl: text('image_url'),
   },
   table => {
     return {
@@ -32,7 +33,7 @@ export const Posts = pgTable(
 
 export const postsRelations = relations(Posts, ({ one }) => ({
   users: one(users, {
-    fields: [Posts.authorId], // The foreign key in the Posts table
-    references: [users.id], // The primary key in the users table
+    fields: [Posts.authorId],
+    references: [users.id],
   }),
 }))

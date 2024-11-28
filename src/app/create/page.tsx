@@ -40,6 +40,7 @@ const CreatePost: FC = async () => {
             <Input type="text" name="title" placeholder="Enter Post Title" required />
             <Textarea rows={10} name="content" placeholder="Enter your content here" required />
             <Input type="text" name="tags" placeholder="Tags (comma-separated)" />
+            <Input type="file" accept="image/*" name="image" className="cursor-pointer" />
             <Button type="submit">Create</Button>
           </form>
         </DialogContent>

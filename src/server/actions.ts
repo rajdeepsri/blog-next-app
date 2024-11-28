@@ -8,6 +8,8 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { redirect } from 'next/navigation'
 import { eq } from 'drizzle-orm'
+import { deleteImage, uploadImage } from '@/lib/utils'
+import { Post } from '@/components/PostCard'
 
 const postSchema = z.object({
   title: z.string(),
@@ -30,7 +32,6 @@ export const createPost = async (data: FormData) => {
 
   // data validation
   const validationResult = postSchema.safeParse(rawFormData)
-  console.log(validationResult)
 
   if (!validationResult.success) {
     throw new Error(
@@ -47,12 +48,22 @@ export const createPost = async (data: FormData) => {
     throw new Error('Not authenticated')
   }
 
+  let imageUrl = ''
+  if (data.get('image')) {
+    const uploadImageResult = await uploadImage(data.get('image') as File)
+    if (!uploadImageResult.success) {
+      throw new Error(uploadImageResult.error!)
+    }
+    imageUrl = uploadImageResult.publicUrl!
+  }
+
   await db.insert(Posts).values({
     title: validatedData.title,
     content: validatedData.content,
     tags: validatedData.tags,
     slicedContent: validatedData.content.slice(0, 100),
     authorId: session.user.id,
+    imageUrl: imageUrl,
   })
 
   revalidatePath('/create')
@@ -60,14 +71,17 @@ export const createPost = async (data: FormData) => {
   redirect('/create')
 }
 
-export const deletePost = async (postId: string) => {
+export const deletePost = async (post: Post) => {
   // authentication check
   const session = await getServerSession(authOptions)
   if (!session || !session?.user.id) {
     throw new Error('Not authenticated')
   }
 
-  await db.delete(Posts).where(eq(Posts.id, postId))
+  if (post.imageUrl) {
+    await deleteImage(post.imageUrl)
+  }
+  await db.delete(Posts).where(eq(Posts.id, post.id))
   revalidatePath('/create')
   revalidatePath('/')
 }

@@ -3,7 +3,8 @@ import { Posts } from '@/server/schema'
 import { eq } from 'drizzle-orm'
 import React, { FC } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
-import { getTagColor } from '@/lib/utils'
+import { cn, getTagColor } from '@/lib/utils'
+import NextImageWithLoader from './ImageWithLoader'
 
 const FullPostCard: FC<{ id: string }> = async ({ id }) => {
   const postData = await db.query.Posts.findFirst({
@@ -40,6 +41,17 @@ const FullPostCard: FC<{ id: string }> = async ({ id }) => {
       <div className="my-4 border border-neutral-700" />
       <div className="flex flex-col gap-2">
         <p className="font-sans text-2xl font-bold">{postData.title}</p>
+        {postData.imageUrl && (
+          <div className="relative h-[30rem] w-full overflow-hidden rounded-sm">
+            <NextImageWithLoader
+              imageUrl={postData.imageUrl}
+              fill
+              priority
+              style={{ objectFit: 'cover' }}
+              alt={postData.title}
+            />
+          </div>
+        )}
         <p className="text-pretty font-sans text-neutral-200">{postData.content}</p>
       </div>
       <div className="mt-6 flex items-center justify-between">
@@ -47,7 +59,7 @@ const FullPostCard: FC<{ id: string }> = async ({ id }) => {
           {postData?.tags &&
             postData.tags.map((tag, i) => (
               <span
-                className={`rounded-sm p-1 text-xs font-semibold text-white ${getTagColor(i)}`}
+                className={cn('rounded-sm p-1 text-xs font-semibold text-white', getTagColor(i))}
                 key={tag}
               >
                 {tag}

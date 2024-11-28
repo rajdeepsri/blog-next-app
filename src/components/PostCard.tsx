@@ -13,6 +13,7 @@ export type Post = {
   authorId: string
   tags: string[] | null
   content: string | null
+  imageUrl: string | null
 }
 
 const PostCard: FC<{ post: Post; isAdminPage?: boolean }> = ({ post, isAdminPage }) => {
