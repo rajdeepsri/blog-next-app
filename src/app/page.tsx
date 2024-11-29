@@ -4,7 +4,7 @@ import { Suspense } from 'react'
 
 export default async function Home() {
   return (
-    <div className="m-5 flex flex-wrap gap-4">
+    <div className="m-5 flex max-w-7xl flex-wrap gap-4">
       <Suspense fallback={<LoadingSkeleton />}>
         <PostList />
       </Suspense>

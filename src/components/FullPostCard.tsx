@@ -40,7 +40,7 @@ const FullPostCard: FC<{ id: string }> = async ({ id }) => {
       </div>
       <div className="my-4 border border-neutral-700" />
       <div className="flex flex-col gap-2">
-        <p className="font-sans text-2xl font-bold">{postData.title}</p>
+        <p className="text-2xl font-bold">{postData.title}</p>
         {postData.imageUrl && (
           <div className="relative h-[30rem] w-full overflow-hidden rounded-sm">
             <NextImageWithLoader
@@ -52,7 +52,7 @@ const FullPostCard: FC<{ id: string }> = async ({ id }) => {
             />
           </div>
         )}
-        <p className="text-pretty font-sans text-neutral-200">{postData.content}</p>
+        <p className="text-pretty text-neutral-200">{postData.content}</p>
       </div>
       <div className="mt-6 flex items-center justify-between">
         <div className="flex items-center gap-2">

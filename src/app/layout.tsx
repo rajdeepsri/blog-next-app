@@ -24,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className={poppins.className}>
-      <body className="antialiased">
+      <body className="bg-neutral-100 antialiased dark:bg-neutral-900">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

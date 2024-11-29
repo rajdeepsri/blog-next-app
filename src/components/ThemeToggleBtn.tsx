@@ -18,7 +18,7 @@ const ThemeToggleBtn: FC = () => {
   return (
     <Button
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      variant="outline"
+      variant="ghost"
       className="h-9 w-9 sm:h-10 sm:w-10"
     >
       {theme === 'dark' ? <Sun /> : <Moon />}
@@ -27,13 +27,3 @@ const ThemeToggleBtn: FC = () => {
 }
 
 export default ThemeToggleBtn
-
-{
-  /* <Button
-onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-variant="outline"
-className="h-9 w-9 border border-neutral-500 bg-white/10 hover:bg-white/20 dark:border-neutral-500 sm:h-10 sm:w-10"
->
-{theme === 'dark' ? <Sun /> : <Moon />}
-</Button> */
-}
