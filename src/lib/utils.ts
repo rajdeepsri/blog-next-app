@@ -2,6 +2,7 @@ import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { tagColors } from './constants'
 import { createClient } from '@supabase/supabase-js'
+import { format } from 'date-fns'
 
 const BUCKET_NAME = 'blog-posts' as const
 const MAX_SIZE_MB = 3
@@ -9,6 +10,8 @@ const MAX_SIZE_MB = 3
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
+
+export const formatDate1 = (date: Date) => format(date, 'dd MMM yyyy')
 
 export const getTagColor = (i: number) => tagColors[i % tagColors.length]
 
