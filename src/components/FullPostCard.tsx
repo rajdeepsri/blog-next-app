@@ -2,9 +2,11 @@ import { db } from '@/server'
 import { Posts } from '@/server/schema'
 import { eq } from 'drizzle-orm'
 import React, { FC } from 'react'
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
-import { cn, getTagColor } from '@/lib/utils'
+import { formatDate } from 'date-fns'
 import NextImageWithLoader from './ImageWithLoader'
+import { getTagColor } from '@/lib/utils'
+import Image from 'next/image'
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 
 const FullPostCard: FC<{ id: string }> = async ({ id }) => {
   const postData = await db.query.Posts.findFirst({
@@ -15,62 +17,75 @@ const FullPostCard: FC<{ id: string }> = async ({ id }) => {
   })
 
   if (!postData) {
-    return <div className="flex items-center justify-center py-5 text-center">Post not found</div>
+    return <div className="text-center text-3xl font-bold">Post not found</div>
   }
+
   return (
-    <div className="w-full max-w-5xl rounded-md border border-neutral-500 p-4">
-      <div className="flex items-center gap-3">
-        <Avatar>
-          {postData.users.avatarUrl && (
-            <AvatarImage
-              src={postData.users.avatarUrl}
-              alt={postData.users.name || 'user-avatar'}
-            />
-          )}
-          <AvatarFallback className="text-xs">{postData.users.name[0]}</AvatarFallback>
-        </Avatar>
-        <div>
-          <p>{postData.users.name}</p>
-          {postData.users.createdAt && (
-            <p className="text-sm text-neutral-400">
-              Joined on {new Date(postData.users.createdAt).toLocaleDateString()}
-            </p>
-          )}
+    <div className="mx-3 max-w-7xl sm:mx-auto">
+      {/* date */}
+      {postData.createdAt && (
+        <p className="text-center text-sm font-semibold text-neutral-500 dark:text-neutral-400 sm:text-base">
+          {formatDate(postData.createdAt, 'MMMM dd, yyyy')}
+        </p>
+      )}
+      {/* title */}
+      <h1 className="mb-6 mt-1 text-center text-3xl font-medium sm:mb-10 sm:mt-2 sm:text-6xl">
+        {postData.title}
+      </h1>
+      {/* image */}
+      {postData.imageUrl && (
+        <div className="relative h-[17rem] w-full overflow-hidden rounded-sm sm:h-[30rem] sm:rounded-md">
+          <NextImageWithLoader
+            imageUrl={postData.imageUrl}
+            alt={postData.title}
+            fill
+            priority
+            style={{ objectFit: 'cover' }}
+          />
         </div>
-      </div>
-      <div className="my-4 border border-neutral-700" />
-      <div className="flex flex-col gap-2">
-        <p className="text-2xl font-bold">{postData.title}</p>
-        {postData.imageUrl && (
-          <div className="relative h-[30rem] w-full overflow-hidden rounded-sm">
-            <NextImageWithLoader
-              imageUrl={postData.imageUrl}
-              fill
-              priority
-              style={{ objectFit: 'cover' }}
-              alt={postData.title}
-            />
-          </div>
-        )}
-        <p className="text-pretty text-neutral-200">{postData.content}</p>
-      </div>
-      <div className="mt-6 flex items-center justify-between">
-        <div className="flex items-center gap-2">
+      )}
+      {/* content */}
+      <p className="my-5 text-sm font-medium text-neutral-800 dark:text-neutral-300 sm:my-10 sm:text-base">
+        {postData.content}
+      </p>
+      <div className="flex w-full flex-col flex-wrap items-center justify-between gap-4 px-0 sm:flex-row sm:gap-2 sm:px-2">
+        {/* tags */}
+        <div className="flex flex-wrap items-center gap-2">
           {postData?.tags &&
             postData.tags.map((tag, i) => (
               <span
-                className={cn('rounded-sm p-1 text-xs font-semibold text-white', getTagColor(i))}
+                className={`rounded-md px-1.5 py-1 text-xs font-semibold text-white sm:px-2.5 sm:py-1.5 sm:text-sm ${getTagColor(i)}`}
                 key={tag}
               >
                 {tag}
               </span>
             ))}
         </div>
-        {postData.createdAt && (
-          <p className="text-sm text-neutral-200">
-            Created on : {new Date(postData.createdAt).toLocaleDateString()}
+        {/* author */}
+        <div className="flex items-center gap-2">
+          {postData.users.avatarUrl ? (
+            <div className="relative mx-1 flex h-9 w-9 shrink-0 overflow-hidden rounded-full sm:h-10 sm:w-10">
+              <Image
+                fill
+                className="aspect-square h-full w-full"
+                src={postData.users.avatarUrl!}
+                alt={postData.users.name || 'user-avatar'}
+                priority
+              />
+            </div>
+          ) : (
+            <Avatar className="h-10 w-10 shadow-md">
+              <AvatarImage
+                src={postData.users.avatarUrl!}
+                alt={postData.users.name || 'user-avatar'}
+              />
+              <AvatarFallback className="text-xs">{postData.users.name?.[0] || 'U'}</AvatarFallback>
+            </Avatar>
+          )}
+          <p className="text-sm font-semibold text-neutral-700 dark:text-neutral-300">
+            {postData.users.name}
           </p>
-        )}
+        </div>
       </div>
     </div>
   )
