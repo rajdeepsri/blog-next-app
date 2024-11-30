@@ -15,7 +15,7 @@ import {
 import { Post } from './PostCard'
 import { Input } from './ui/input'
 import { Textarea } from './ui/textarea'
-import { Loader2, X } from 'lucide-react'
+import { Loader2, Pencil, Trash2, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 
@@ -63,10 +63,12 @@ const DeleteEditPostBtn: FC<{ post: Post }> = ({ post }) => {
   return (
     <>
       <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="outline">Edit</Button>
+        <DialogTrigger asChild onClick={e => e.stopPropagation()}>
+          <Button variant="outline" onClick={e => e.stopPropagation()}>
+            <Pencil />
+          </Button>
         </DialogTrigger>
-        <DialogContent className="p-0">
+        <DialogContent onClick={e => e.stopPropagation()} className="dialog-overlay p-0">
           <DialogTitle className="mt-5 text-center text-3xl font-semibold">Edit Post</DialogTitle>
           <DialogDescription hidden>this is modal</DialogDescription>
           <DialogClose ref={closeButtonRef} hidden>
@@ -141,10 +143,12 @@ const DeleteEditPostBtn: FC<{ post: Post }> = ({ post }) => {
         </DialogContent>
       </Dialog>
       <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="destructive">Delete</Button>
+        <DialogTrigger asChild onClick={e => e.stopPropagation()}>
+          <Button variant="outline" onClick={e => e.stopPropagation()}>
+            <Trash2 size={24} />
+          </Button>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent onClick={e => e.stopPropagation()}>
           <DialogHeader>
             <DialogTitle>Are you absolutely sure?</DialogTitle>
             <DialogDescription>

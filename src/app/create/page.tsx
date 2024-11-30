@@ -11,25 +11,28 @@ import { Textarea } from '@/components/ui/textarea'
 import { createPost } from '@/server/actions'
 import { getServerSession } from 'next-auth'
 import React, { FC, Suspense } from 'react'
-import { authOptions } from '../api/auth/[...nextauth]/route'
 import { db } from '@/server'
 import { eq } from 'drizzle-orm'
 import { Posts } from '@/server/schema'
 import PostCard from '@/components/PostCard'
 import LoadingSkeleton from '@/components/LoadingSkeleton'
+import { authOptions } from '@/lib/utils'
 
 const CreatePost: FC = async () => {
   const session = await getServerSession(authOptions)
-  if (!session) return <p className="my-4 text-center">please sign in to continue</p>
+  if (!session)
+    return (
+      <p className="mt-28 text-center text-xl font-medium capitalize">please sign in to continue</p>
+    )
 
   return (
-    <div className="my-5 flex w-screen flex-col items-center justify-center gap-5">
-      <h1 className="text-3xl font-semibold text-neutral-700 dark:text-neutral-300">
+    <div className="flex w-screen flex-col items-center justify-center gap-5 pt-20 sm:mx-auto sm:pt-24">
+      <h1 className="text-center text-2xl font-light text-neutral-700 dark:text-neutral-300 sm:text-3xl">
         Welcome {session.user.name}
       </h1>
       <Dialog>
         <DialogTrigger asChild>
-          <Button>Create Post</Button>
+          <Button variant="outline">Create Post</Button>
         </DialogTrigger>
         <DialogContent className="p-0">
           <DialogTitle className="mt-5 text-center text-3xl font-semibold">
@@ -55,10 +58,11 @@ const CreatePost: FC = async () => {
 const UserPosts: FC<{ userId: string }> = async ({ userId }) => {
   const userPosts = await db.query.Posts.findMany({
     where: eq(Posts.authorId, userId),
+    with: { users: true },
   })
 
   return (
-    <section className="flex w-full max-w-5xl flex-col gap-4">
+    <section className="mx-3 mb-10 grid max-w-5xl grid-cols-1 gap-4 sm:mx-auto sm:w-full sm:grid-cols-2">
       {userPosts && userPosts.map(post => <PostCard key={post.id} post={post} isAdminPage />)}
     </section>
   )

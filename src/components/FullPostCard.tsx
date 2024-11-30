@@ -7,6 +7,7 @@ import NextImageWithLoader from './ImageWithLoader'
 import { getTagColor } from '@/lib/utils'
 import Image from 'next/image'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
+import MarkdownRenderer from './MarkdownRenderer'
 
 const FullPostCard: FC<{ id: string }> = async ({ id }) => {
   const postData = await db.query.Posts.findFirst({
@@ -21,7 +22,7 @@ const FullPostCard: FC<{ id: string }> = async ({ id }) => {
   }
 
   return (
-    <div className="mx-3 max-w-7xl sm:mx-auto">
+    <div className="mx-4 max-w-7xl sm:mx-auto">
       {/* date */}
       {postData.createdAt && (
         <p className="text-center text-sm font-semibold text-neutral-500 dark:text-neutral-400 sm:text-base">
@@ -29,7 +30,7 @@ const FullPostCard: FC<{ id: string }> = async ({ id }) => {
         </p>
       )}
       {/* title */}
-      <h1 className="mb-6 mt-1 text-center text-3xl font-medium sm:mb-10 sm:mt-2 sm:text-6xl">
+      <h1 className="mb-6 mt-1 text-center text-3xl font-medium sm:mb-10 sm:mt-3 sm:text-7xl">
         {postData.title}
       </h1>
       {/* image */}
@@ -45,9 +46,9 @@ const FullPostCard: FC<{ id: string }> = async ({ id }) => {
         </div>
       )}
       {/* content */}
-      <p className="my-5 text-sm font-medium text-neutral-800 dark:text-neutral-300 sm:my-10 sm:text-base">
-        {postData.content}
-      </p>
+      <div className="flex w-full justify-center">
+        <MarkdownRenderer className="my-5" content={postData.content!} />
+      </div>
       <div className="flex w-full flex-col flex-wrap items-center justify-between gap-4 px-0 sm:flex-row sm:gap-2 sm:px-2">
         {/* tags */}
         <div className="flex flex-wrap items-center gap-2">

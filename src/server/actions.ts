@@ -5,10 +5,9 @@ import { z } from 'zod'
 import { db } from '.'
 import { Posts } from './schema'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { redirect } from 'next/navigation'
 import { eq } from 'drizzle-orm'
-import { deleteImage, uploadImage } from '@/lib/utils'
+import { authOptions, deleteImage, uploadImage } from '@/lib/utils'
 import { Post } from '@/components/PostCard'
 
 const postSchema = z.object({

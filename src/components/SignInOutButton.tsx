@@ -1,11 +1,11 @@
 import React from 'react'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import SignInBtn from './SignInBtn'
 import SignOutBtn from './SignOutBtn'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import Image from 'next/image'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
+import { authOptions } from '@/lib/utils'
 
 const SignInOutButton = async () => {
   const session = await getServerSession(authOptions)
