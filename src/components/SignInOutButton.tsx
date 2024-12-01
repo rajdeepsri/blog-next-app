@@ -5,7 +5,7 @@ import SignOutBtn from './SignOutBtn'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import Image from 'next/image'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
-import { authOptions } from '@/lib/utils'
+import { authOptions } from '@/server/auth'
 
 const SignInOutButton = async () => {
   const session = await getServerSession(authOptions)

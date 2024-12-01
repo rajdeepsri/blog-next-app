@@ -8,3 +8,6 @@ export const tagColors = [
   'bg-orange-500',
   'bg-teal-500',
 ]
+
+export const BUCKET_NAME = 'blog-posts' as const
+export const MAX_SIZE_MB = 3

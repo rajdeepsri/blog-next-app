@@ -16,7 +16,7 @@ import { eq } from 'drizzle-orm'
 import { Posts } from '@/server/schema'
 import PostCard from '@/components/PostCard'
 import LoadingSkeleton from '@/components/LoadingSkeleton'
-import { authOptions } from '@/lib/utils'
+import { authOptions } from '@/server/auth'
 
 const CreatePost: FC = async () => {
   const session = await getServerSession(authOptions)

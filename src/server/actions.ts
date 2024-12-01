@@ -7,8 +7,9 @@ import { Posts } from './schema'
 import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 import { eq } from 'drizzle-orm'
-import { authOptions, deleteImage, uploadImage } from '@/lib/utils'
+import { deleteImage, uploadImage } from '@/lib/utils'
 import { Post } from '@/components/PostCard'
+import { authOptions } from './auth'
 
 const postSchema = z.object({
   title: z.string(),
