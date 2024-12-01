@@ -2,7 +2,9 @@ import FullPostCard from '@/components/FullPostCard'
 import { Skeleton } from '@/components/ui/skeleton'
 import React, { FC, Suspense } from 'react'
 
-const Post: FC<{ params: { id: string } }> = async ({ params }) => {
+type tParams = Promise<{ id: string }>
+
+const Post: FC<{ params: tParams }> = async ({ params }) => {
   const param = await params
 
   return (
