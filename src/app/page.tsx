@@ -9,7 +9,7 @@ export default async function Home() {
         All Blog Posts
       </h1>
       <div className="mx-3 grid max-w-7xl grid-cols-1 justify-center gap-4 sm:mx-auto sm:grid-cols-2 lg:grid-cols-3">
-        <Suspense fallback={<LoadingSkeleton />}>
+        <Suspense fallback={<LoadingSkeleton numOfSkeletons={3} />}>
           <PostList />
         </Suspense>
       </div>

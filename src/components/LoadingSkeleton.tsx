@@ -1,14 +1,13 @@
 import React, { FC } from 'react'
 import { Skeleton } from './ui/skeleton'
-import clsx from 'clsx'
 
-const LoadingSkeleton: FC<{ className?: string }> = ({ className }) => {
+const LoadingSkeleton: FC<{ numOfSkeletons: number }> = ({ numOfSkeletons }) => {
   return (
-    <div className={clsx('flex flex-wrap gap-4', className)}>
-      {new Array(5).fill(0).map((_, i: number) => (
-        <Skeleton key={i} className="h-[17rem] min-w-[20rem] flex-1 rounded-xl" />
+    <>
+      {new Array(numOfSkeletons).fill(0).map((_, i: number) => (
+        <Skeleton key={i} className="h-[26rem] min-w-[20rem] flex-1 rounded-xl sm:h-[30rem]" />
       ))}
-    </div>
+    </>
   )
 }
 
