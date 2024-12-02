@@ -11,12 +11,9 @@ import { Textarea } from '@/components/ui/textarea'
 import { createPost } from '@/server/actions'
 import { getServerSession } from 'next-auth'
 import React, { FC, Suspense } from 'react'
-import { db } from '@/server'
-import { eq } from 'drizzle-orm'
-import { Posts } from '@/server/schema'
-import PostCard from '@/components/PostCard'
 import LoadingSkeleton from '@/components/LoadingSkeleton'
 import { authOptions } from '@/server/auth'
+import { UserPosts } from '@/components/UserPosts'
 
 const CreatePost: FC = async () => {
   const session = await getServerSession(authOptions)
@@ -48,23 +45,17 @@ const CreatePost: FC = async () => {
           </form>
         </DialogContent>
       </Dialog>
-      <Suspense fallback={<LoadingSkeleton className="max-w-5xl" />}>
+      <Suspense
+        key={session.user.id}
+        fallback={
+          <div className="mx-3 mb-10 grid max-w-5xl grid-cols-1 gap-4 sm:mx-auto sm:w-full sm:grid-cols-2">
+            <LoadingSkeleton numOfSkeletons={2} />
+          </div>
+        }
+      >
         <UserPosts userId={session.user.id} />
       </Suspense>
     </div>
-  )
-}
-
-const UserPosts: FC<{ userId: string }> = async ({ userId }) => {
-  const userPosts = await db.query.Posts.findMany({
-    where: eq(Posts.authorId, userId),
-    with: { users: true },
-  })
-
-  return (
-    <section className="mx-3 mb-10 grid max-w-5xl grid-cols-1 gap-4 sm:mx-auto sm:w-full sm:grid-cols-2">
-      {userPosts && userPosts.map(post => <PostCard key={post.id} post={post} isAdminPage />)}
-    </section>
   )
 }
 
