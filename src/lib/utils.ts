@@ -10,7 +10,15 @@ export function cn(...inputs: ClassValue[]) {
 
 export const formatDate1 = (date: Date) => format(date, 'dd MMM yyyy')
 
-export const getTagColor = (i: number) => tagColors[i % tagColors.length]
+// to make sure no two colors are same within the post
+export const shuffleArray = () => {
+  const shuffledColors = [...tagColors]
+  for (let i = shuffledColors.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[shuffledColors[i], shuffledColors[j]] = [shuffledColors[j], shuffledColors[i]]
+  }
+  return shuffledColors
+}
 
 const supabaseClient = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_PROJECT_URL!,

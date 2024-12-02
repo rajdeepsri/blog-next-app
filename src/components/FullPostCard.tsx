@@ -4,10 +4,10 @@ import { eq } from 'drizzle-orm'
 import React, { FC } from 'react'
 import { formatDate } from 'date-fns'
 import NextImageWithLoader from './ImageWithLoader'
-import { getTagColor } from '@/lib/utils'
 import Image from 'next/image'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import MarkdownRenderer from './MarkdownRenderer'
+import Tags from './Tags'
 
 const FullPostCard: FC<{ id: string }> = async ({ id }) => {
   const postData = await db.query.Posts.findFirst({
@@ -50,18 +50,7 @@ const FullPostCard: FC<{ id: string }> = async ({ id }) => {
         <MarkdownRenderer className="my-5" content={postData.content!} />
       </div>
       <div className="flex w-full flex-col flex-wrap items-center justify-between gap-4 px-0 sm:flex-row sm:gap-2 sm:px-2">
-        {/* tags */}
-        <div className="flex flex-wrap items-center gap-2">
-          {postData?.tags &&
-            postData.tags.map((tag, i) => (
-              <span
-                className={`rounded-md px-1.5 py-1 text-xs font-semibold text-white sm:px-2.5 sm:py-1.5 sm:text-sm ${getTagColor(i)}`}
-                key={tag}
-              >
-                {tag}
-              </span>
-            ))}
-        </div>
+        <Tags post={postData} />
         {/* author */}
         <div className="flex items-center gap-2">
           {postData.users.avatarUrl ? (

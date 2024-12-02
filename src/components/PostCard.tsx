@@ -1,11 +1,12 @@
 import React, { FC } from 'react'
-import { cn, formatDate1, getTagColor } from '@/lib/utils'
+import { cn, formatDate1 } from '@/lib/utils'
 import NextImageWithLoader from './ImageWithLoader'
 import samplePostImage from '../../public/samplePostImage.jpg'
 import Image from 'next/image'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import DeleteEditPostBtn from './DeleteEditPostBtn'
 import CustomLink from './CustomLink'
+import Tags from './Tags'
 
 export type User = {
   name: string
@@ -73,17 +74,7 @@ const PostCard: FC<{ post: Post; isAdminPage?: boolean }> = ({ post, isAdminPage
         </div>
       </div>
       <div className="space-y-4 sm:space-y-3">
-        <div className="flex flex-wrap items-center gap-2">
-          {post?.tags &&
-            post.tags.map((tag, i) => (
-              <span
-                className={`rounded-md px-1.5 py-1 text-xs font-semibold text-white sm:px-2 sm:py-1.5 ${getTagColor(i)}`}
-                key={tag}
-              >
-                {tag}
-              </span>
-            ))}
-        </div>
+        <Tags post={post} />
         {!isAdminPage && (
           <div className="flex items-center gap-2">
             {post.users.avatarUrl ? (
