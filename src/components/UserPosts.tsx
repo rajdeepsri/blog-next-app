@@ -5,7 +5,6 @@ import { FC } from 'react'
 import PostCard from './PostCard'
 
 export const UserPosts: FC<{ userId: string }> = async ({ userId }) => {
-  await new Promise(resolve => setTimeout(resolve, 2000))
   const userPosts = await db.query.Posts.findMany({
     where: eq(Posts.authorId, userId),
     with: { users: true },
