@@ -11,3 +11,9 @@ export const tagColors = [
 
 export const BUCKET_NAME = 'blog-posts' as const
 export const MAX_SIZE_MB = 3
+
+export const navLinks = [
+  { title: 'Home', href: '/' },
+  { title: 'About Me', href: '/about' },
+  { title: 'Create', href: '/create' },
+]

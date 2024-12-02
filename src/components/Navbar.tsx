@@ -1,13 +1,7 @@
-import Link from 'next/link'
 import ThemeToggleBtn from './ThemeToggleBtn'
 import SignInOutButton from './SignInOutButton'
-import { Button } from './ui/button'
-
-const navLinks = [
-  { title: 'Home', href: '/' },
-  { title: 'About Me', href: '/about' },
-  { title: 'Create', href: '/create' },
-]
+import { navLinks } from '@/lib/constants'
+import NavlinkBtn from './NavLinks'
 
 const Navbar = () => {
   return (
@@ -17,11 +11,7 @@ const Navbar = () => {
       </h1>
       <ul className="flex items-center gap-1">
         {navLinks.map(n => (
-          <Button variant="ghost" key={n.title}>
-            <Link className="text-sm font-semibold" href={n.href}>
-              {n.title}
-            </Link>
-          </Button>
+          <NavlinkBtn key={n.title} nav={n} />
         ))}
       </ul>
       <div className="flex items-center gap-2">
