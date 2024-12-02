@@ -31,24 +31,51 @@ const CreatePost: FC = async () => {
         <DialogTrigger asChild>
           <Button variant="outline">Create Post</Button>
         </DialogTrigger>
-        <DialogContent className="p-0">
-          <DialogTitle className="mt-5 text-center text-3xl font-semibold">
+        <DialogContent className="w-[94%] rounded-md px-2 py-3 sm:w-full">
+          <DialogTitle className="mt-2 text-center text-2xl font-semibold sm:text-3xl">
             Create New Post
           </DialogTitle>
           <DialogDescription hidden>this is modal</DialogDescription>
-          <form className="m-5 flex min-w-[25rem] flex-col space-y-3" action={createPost}>
-            <Input type="text" name="title" placeholder="Enter Post Title" required />
-            <Textarea rows={10} name="content" placeholder="Enter your content here" required />
-            <Input type="text" name="tags" placeholder="Tags (comma-separated)" />
-            <Input type="file" accept="image/*" name="image" className="cursor-pointer" />
-            <Button type="submit">Create</Button>
+          <form
+            className="flex flex-col space-y-2 sm:m-5 sm:min-w-[25rem] sm:space-y-3"
+            action={createPost}
+          >
+            <Input
+              className="text-sm sm:text-base"
+              type="text"
+              name="title"
+              placeholder="Enter Post Title"
+              required
+            />
+            <Textarea
+              className="text-sm sm:text-base"
+              rows={10}
+              name="content"
+              placeholder="Enter your content here"
+              required
+            />
+            <Input
+              className="text-sm sm:text-base"
+              type="text"
+              name="tags"
+              placeholder="Tags (comma-separated)"
+            />
+            <Input
+              className="cursor-pointer text-sm sm:text-base"
+              type="file"
+              accept="image/*"
+              name="image"
+            />
+            <Button className="text-sm sm:text-base" type="submit">
+              Create
+            </Button>
           </form>
         </DialogContent>
       </Dialog>
       <Suspense
         key={session.user.id}
         fallback={
-          <div className="mx-3 mb-10 grid max-w-5xl grid-cols-1 gap-4 sm:mx-auto sm:w-full sm:grid-cols-2">
+          <div className="mb-10 grid w-full max-w-5xl grid-cols-1 gap-4 px-3 sm:mx-auto sm:w-full sm:grid-cols-2 sm:px-0">
             <LoadingSkeleton numOfSkeletons={2} />
           </div>
         }
